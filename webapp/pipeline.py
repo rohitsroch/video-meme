@@ -1,8 +1,9 @@
+import os
 import sys
 sys.path.append(os.getcwd())
 import pandas as pd
 import numpy as np
-import pysrt
+#import pysrt
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -13,10 +14,10 @@ import string
 import os
 import subprocess
 import argparse
-import preprocessor as p
-from pydub import AudioSegment
-from watson_developer_cloud import ToneAnalyzerV3
-from watson_developer_cloud.tone_analyzer_v3 import ToneInput
+#import preprocessor as p
+#from pydub import AudioSegment
+#from watson_developer_cloud import ToneAnalyzerV3
+#from watson_developer_cloud.tone_analyzer_v3 import ToneInput
 
 
 def get_emotions(utterances):
