@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ author }}'s app</title>
+    <style>
+      html, body {
+          height: 100%;
+      }
+
+      html {
+          display: table;
+          margin: auto;
+      }
+      body {
+          background-color: #92a8d1;
+          font-family: Arial;
+          display: table-cell;
+          vertical-align: middle;
+      }
+      h1 {
+          color:red;
+          font-style: bold;
+
+      }
+
+      * {
+      box-sizing: border-box;
+      }
+
+      input[type=file] {
+      padding: 5px;
+      font-size: 15px;
+      border: 1px solid grey;
+      float: left;
+      width: 80%;
+      background: #f1f1f1;
+      }
+
+      </style>
+  </head>
+
+  <body>
+    <h1>{{ name }}!</h1> <br>
+    <form action = "http://localhost:5000/" method = "POST" 
+         enctype = "multipart/form-data">
+         <h2>Upload Video</h2> 
+         <input type = "file" name = "file_video" /><br></br>
+         <h2>Upload srt</h2>
+         <input type = "file" name = "file_srt" /> <br><br><br>
+         <input type = "submit"/>
+    </form>
+  </body>
+</html>

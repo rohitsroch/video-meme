@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>{{ author }}'s app</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        html {
+            display: table;
+            margin: auto;
+        }
+        body {
+            background-color: #92a8d1;
+            font-family: Arial;
+            display: table-cell;
+            vertical-align: middle;
+        }
+        h3 {
+            color:red;
+        }
+
+        * {
+        box-sizing: border-box;
+        }
+
+        form.example input[type=text] {
+        padding: 5px;
+        font-size: 15px;
+        border: 1px solid grey;
+        float: left;
+        width: 80%;
+        background: #f1f1f1;
+        }
+
+        form.example button {
+        float: left;
+        width: 20%;
+        padding: 5px;
+        background: #2196F3;
+        color: white;
+        font-size: 15px;
+        border: 1px solid grey;
+        border-left: none;
+        cursor: pointer;
+        }
+
+        form.example button:hover {
+        background: #0b7dda;
+        }
+
+        form.example::after {
+        content: "";
+        clear: both;
+        display: table;
+        }
+    </style>
+    <script src="static/js/papaparse/papaparse.js"></script>
+    <script src="static/js/jquery/jquery-3.3.1.min.js"></script>
+    </head>
+<body>
+        <div>
+            <h3>Original video</h3>
+            <video width="400" controls>
+                <source src="static/original_scene.mp4" type="video/mp4">
+                <source src="static/original_scene.ogg" type="video/ogg">
+                Your browser does not support HTML5 video.
+            </video> 
+    
+            <h3>Search the Indexed scene</h3>
+            <form name="jumptime" class="example" style="margin:auto;max-width:400px" action="javascript:jumpToTimeoffset(document.jumptime);" method="">
+                <input type="text" name='search' placeholder="Search.." name="search">
+                <button type="button" name="button" onclick="jumpToTimeoffset(this.form)"><i class="fa fa-search"></i></button>
+            </form><hr>
+            <video width="400"  id="video" controls>
+                <source src="static/out.mp4" type="video/mp4">
+                <source src="static/out.ogg" type="video/ogg">
+                Your browser does not support HTML5 video.
+            </video>
+        </div>
+
+    <script>
+        // document.getElementById('video').addEventListener('loadedmetadata', function() {
+        //     this.currentTime = document.getElementById('search').value;
+        // }, false);
+
+        // get video element
+        var video = document.getElementById("video");
+        
+        // once video is loaded, jump to time offset
+        video.addEventListener("loadedmetadata", function() {
+            this.currentTime = 0
+        }, false);
+
+        // set callback for video to update page URL with time offset when paused
+        video.addEventListener("pause", function() {
+            videotime = video.currentTime;
+        }, false);
+
+        // jump to time offset action
+        function jumpToTimeoffset(form) {
+            var query = form.search.value.toLowerCase();
+            var offset = 0
+            console.log(query)
+            // Parse local CSV file
+            var csv_file='static/csv/emotion_index.csv'
+            Papa.parse(csv_file, {
+                download: true,
+                delimiter: ",",	
+                complete: function(results) {
+                    console.log(results.data);
+                    var htmlText = '';
+
+                    for(var i=1; i< results.data.length-1; i=i+1){
+                        start = parseInt(results.data[i][0])
+                        end = parseInt(results.data[i][1])
+                        text = (results.data[i][2]).toLowerCase()
+                        emo = (results.data[i][3]).toLowerCase()
+                        score = parseFloat(results.data[i][4])
+
+                        if( String(emo)==String(query) || String(query).search(String(emo) )!=-1 
+                                  ||  String(text).search(String(query) )!=-1 ){
+                            offset= parseInt((end-start)/2)
+                            console.log(offset)
+                            video.currentTime = offset;
+                            htmlText += '<div class="div-conatiner">';
+                            htmlText += '<p class="p-name"> start: ' + offset + ' sec </p>';
+                            htmlText += '<p class="p-loc"> end: ' + end + ' sec</p>';
+                            htmlText += '<p class="p-desc"> text: ' + text + '</p>';
+                            htmlText += '<p class="p-created"> emotion: ' + emo + '</p>';
+                            htmlText += '<p class="p-uname"> score: ' + score + '</p>';
+                            htmlText += '</div>';
+                            break
+                        }
+                    }
+                    $('body').append(htmlText);
+
+                }
+            });
+            //console.log(offset)
+            //video.currentTime = offset;
+        }    
+    </script>
+</body>
+</html>
+  
